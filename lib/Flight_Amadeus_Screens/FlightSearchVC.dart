@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../flyScreens/Flights.dart';
 import '../flyScreens/airlineVC.dart';
 import 'OneWay_DestinationSelection/Oneway-DestinationJsonVC.dart';
@@ -13,8 +14,10 @@ import 'ReturnJourney_flightsearch/forwardtripVC.dart';
 import 'flightClasstypesVC.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class FlightSearchVC extends StatefulWidget {
   String classstr = '';
+
   @override
   _FlightSearchVCState createState() => _FlightSearchVCState();
 }
@@ -50,13 +53,27 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
   String RndDestinationAirportcitystr = '';
   String Retrived_Rndtrp_Destination_iatacodestr = '';
   String Retrived_Rndtrp_Destination_Citynamestr = '';
+  List<Widget> flightFields = [];
+  TextEditingController FromdateInputController = TextEditingController();
+  List<TextEditingController> fromControllers = [];
+  List<TextEditingController> toControllers = [];
+  List<double> fieldHeights = []; // List to manage dynamic heights
+  List<TextEditingController> departureControllers = [];
+
+
+
+
+
 
   //TabController _tabController;
   late TabController _tabController;
 
+
+
   _retrieveValues() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+
 
       print(currency_code_dropdownvalue);
       prefs.setString('currency_code_dropdownvaluekey', (currency_code_dropdownvalue));
@@ -78,7 +95,11 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
   Retrived_Oneway_Citynamestr = prefs.getString('Oneway_Citynamekey') ?? '';
       Retrived_Oneway_Airportnamestr = prefs.getString('Oneway_Oneway_Airportnamestrkey') ?? '';
 
+
+
+
       //Roundtrip values
+
       RndOriginAirportcitystr = prefs.getString('Rndtrp_origincitykey') ?? '';
       Retrived_Rndtrp_iatacodestr = prefs.getString('Rndtrp_originiatacodekey') ?? '';
       Retrived_Rndtrp_Citynamestr = prefs.getString('Rndtrp_originCitynamekey') ?? '';
@@ -101,14 +122,118 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
       print(_tabController.index);
     });
   }
+  void addFlightField() {
+    print('Add flight field clicked...');
+
+    // Create new controllers for the new fields
+    TextEditingController fromController = TextEditingController();
+    TextEditingController toController = TextEditingController();
+    TextEditingController departureController = TextEditingController(); // New controller for departure
+
+    // Add the controllers to their respective lists
+    fromControllers.add(fromController);
+    toControllers.add(toController);
+    departureControllers.add(departureController);
+
+    // Add a new column for the new set of fields
+    flightFields.add(
+      Column(
+        children: [
+          Container(
+            height: 50,
+            width: 340,
+            color: Colors.white,
+            child: TextField(
+              controller: fromController,
+              readOnly: true,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+              onTap: () async {
+                print('Flying from clicked...');
+                // Logic for navigating to selection screen
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFFFFFFF),
+                prefixIcon: Icon(Icons.flight, color: Colors.green),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(0)),
+                ),
+                hintText: 'Flying from',
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            height: 50,
+            width: 340,
+            color: Colors.white,
+            child: TextField(
+              controller: toController,
+              readOnly: true,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+              onTap: () async {
+                print('Flying to clicked...');
+                // Logic for navigating to selection screen
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFFFFFFF),
+                prefixIcon: Icon(Icons.flight, color: Colors.green),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(0)),
+                ),
+                hintText: 'Flying to',
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            height: 50,
+            width: 340,
+            color: Colors.white,
+            child: TextField(
+              controller: departureController, // Use the new controller
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFFFFFFF),
+                prefixIcon: Icon(Icons.calendar_month, color: Colors.green),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(0)),
+                ),
+                hintText: 'Departure',
+              ),
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1950),
+                  lastDate: DateTime(2050),
+                );
+                if (pickedDate != null) {
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                  departureController.text = formattedDate; // Use the new controller for departure
+                }
+              },
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
+
+    // Call setState to refresh the UI with new fields
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
 
     _retrieveValues();
+    addFlightField();
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,12 +266,16 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
             children: <Widget>[
 
               _tabSection(context),
+
+
             ],
           ),
         ));
   }
 
+
   Widget _tabSection(BuildContext context) {
+
     print('calling passenger list values....');
     print(classstr);
     print(passengerliststr);
@@ -158,6 +287,7 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
     });
 
     int selectedindex = 0;
+
     String fromDate = '';
     TextEditingController FromdateInputController = TextEditingController();
     // TextEditingController TodateInputController = TextEditingController();
@@ -185,6 +315,8 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
     Rnd_DestinationAirportCityController.text = Retrived_Rndtrp_Destination_iatacodestr;
 
     //DestinationAirportCityController.text = DestinationAirportcitystr;
+
+
     passengerController.text = passengerliststr + " ," + classstr;
     bool first = false;
     String returnfromDatestr = '';
@@ -305,6 +437,10 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                           prefs.setString("OnewayDeparturekey", 'OnewayDeparture');
                           prefs.setString("Oneway_iatacodekey", Retrived_Oneway_iatacodestr);
                           prefs.setString("Oneway_Citynamekey", Retrived_Oneway_Citynamestr);
+
+
+
+
                         },
                         decoration: InputDecoration(
                           filled: true,
@@ -521,6 +657,9 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                           MaterialPageRoute(
                               builder: (context) => FlightOnWardTrip()),
                         );
+
+
+
                       } else {
                         print('empty field...');
                         final snackBar = SnackBar(
@@ -529,8 +668,10 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
 
+
                     },
                   )
+
 
                   ],
                 ),
@@ -564,7 +705,12 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                             prefs.setString("RndtrpDeparturekey", 'RndtrpDeparture');
                             prefs.setString("Rndtrp_originiatacodekey", Retrived_Rndtrp_iatacodestr);
                             prefs.setString("Rndtrp_originCitynamekey", Retrived_Rndtrp_Citynamestr);
-                          
+                            //
+                            // RndOriginAirportcitystr = prefs.getString('Rndtrp_origincitykey') ?? '';
+                            // Retrived_Rndtrp_iatacodestr = prefs.getString('Rndtrp_originiatacodekey') ?? '';
+                            // Retrived_Rndtrp_Citynamestr = prefs.getString('Rndtrp_originCitynamekey') ?? '';
+
+
                           },
                         decoration: InputDecoration(
                           filled: true,
@@ -751,8 +897,10 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                           )
                         ],
                       ),
-                   
+                     
                     ),
+
+
                     SizedBox(
                       height: 10,
                     ),
@@ -841,6 +989,296 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                   ],
                 ),
               ),
+
+              Container(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 340,
+                          color: Colors.white,
+
+                          child: TextField(
+                            controller: OriginAirportCityController,
+                            readOnly: true,
+                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.w800),
+
+                            onTap: () async{
+                              print('One way source clicked...');
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SourceDestinationCityVC()),
+                              );
+                              print('Oneway selected ind1 ');
+                              print(selectedindex);
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setInt('selectedIndexkey', selectedindex);
+                              prefs.setString("OnewayDeparturekey", 'OnewayDeparture');
+                              prefs.setString("Oneway_iatacodekey", Retrived_Oneway_iatacodestr);
+                              prefs.setString("Oneway_Citynamekey", Retrived_Oneway_Citynamestr);
+
+
+
+
+                            },
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xFFFFFFFF),
+                              prefixIcon: Icon(
+                                  Icons.flight, color: Colors.green),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(0),
+                                ),
+                              ),
+                              hintText: 'Flying from',
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 340,
+                          color: Colors.white,
+                          child: TextField(
+                            controller: DestinationAirportCityController,
+                            readOnly: true,
+                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.w800),
+
+                            onTap: () async{
+                              print('One way destination clicked...');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OnewwayDestinationCityVC()),
+                              );
+                              print('Oneway selected ind1');
+                              print(selectedindex);
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setInt('selectedIndexkey', selectedindex);
+                              prefs.setString("OnewayArrivalkey", 'OnewayArrival');
+                              prefs.setString("Oneway_Destinationiatacodekey", RetrivedOneway_Oneway_Destinationiatacodestr);
+                              prefs.setString("Oneway_DestinationCitynamekey", RetrivedOnew_Oneway_DestinationCitynamestr);
+
+                            },
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xFFFFFFFF),
+                              prefixIcon: Icon(
+                                  Icons.flight, color: Colors.green),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(0),
+                                ),
+                              ),
+                              hintText: 'Flying to',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 340,
+                          //color: Colors.white,
+                          color: Colors.white,
+
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              DropdownButton(
+                                isExpanded: true,
+                                // Initial Value
+                                value: currency_code_dropdownvalue,
+                                // Down Arrow Icon
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                // Array list of items
+                                items: items.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(items),
+                                  );
+                                }).toList(),
+                                // After selecting the desired option,it will
+                                // change button value to selected value
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    currency_code_dropdownvalue = newValue!;
+
+
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 340,
+                          color: Colors.white,
+                          child: TextField(
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color(0xFFFFFFFF),
+                                prefixIcon: Icon(
+                                    Icons.calendar_month, color: Colors.green),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(0),
+                                  ),
+                                ),
+
+                                hintText: 'Departure',
+                              ),
+
+                              controller: FromdateInputController,
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1950),
+                                    lastDate: DateTime(2050));
+                                if (pickedDate != null) {
+                                  FromdateInputController.text =
+                                      pickedDate.toString();
+                                  fromDate = DateFormat('yyyy-MM-dd').format(
+                                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+
+                                  FromdateInputController.text = fromDate;
+                                }
+                              }
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 340,
+                          color: Colors.white,
+                          child: TextField(
+                            controller: passengerController,
+                            readOnly: true,
+                            style: TextStyle(fontSize: 16),
+
+                            onTap: () async{
+                              print('Economy class clicked...');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => classTypesVC()),
+                              );
+                              print('Oneway selected ind');
+                              print(selectedindex);
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setInt('selectedIndexkey', selectedindex);
+
+                            },
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xFFFFFFFF),
+                              prefixIcon: Icon(Icons.account_circle_outlined,
+                                  color: Colors.green),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(0),
+                                ),
+                              ),
+                              hintText: '1 Passenger , Economy',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjust alignment as needed
+                          children: [
+                            InkWell(
+                              child: Container(
+                                height: 50, // Set height for consistent button size
+                                width: 160, // Set a width for the button (or use Expanded)
+                                color: Colors.green,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Add Dest",
+                                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w800, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                // Add destination logic here
+                                addFlightField(); // Add new fields when tapped
+                              },
+                            ),
+                            SizedBox(width: 10), // Optional: add spacing between the buttons
+                            InkWell(
+                              child: Container(
+                                height: 50,
+                                width: 160, // Set a width for the button (or use Expanded)
+                                color: Colors.green,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Search",
+                                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w800, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                if (FromdateInputController.text != '') {
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  flightTokenstr = prefs.getString('flightTokenstrKey') ?? '';
+                                  print('tap..');
+                                  print(flightTokenstr);
+                                  prefs.setString("flightTokenstrKey", flightTokenstr);
+                                  prefs.setString("from_Datekey", FromdateInputController.text);
+                                  print(currency_code_dropdownvalue);
+                                  prefs.setString('currency_code_dropdownvaluekey', currency_code_dropdownvalue);
+                                  prefs.setString('travel_classstr', classstr);
+
+                                  print('Tapped onward....');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FlightOnWardTrip(),
+                                    ),
+                                  );
+                                } else {
+                                  print('empty field...');
+                                  final snackBar = SnackBar(
+                                    content: Text('Please select currency code and date.'),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                }
+                              },
+                            ),
+                          ],
+                        )
+
+
+
+                      ],
+                    ),
+                  ),
+
+
             ]),
           ),
         ],
@@ -848,6 +1286,10 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
     );
   }
 }
+
+
+
+
 
 class Entry {
   final String? name;
@@ -859,146 +1301,4 @@ class Entry {
       );
 
 
-}class MultiCityView extends StatefulWidget {
-  @override
-  _MultiCityViewState createState() => _MultiCityViewState();
-}
-
-class _MultiCityViewState extends State<MultiCityView> {
-  List<TextEditingController> destinationControllers = [];
-  List<TextEditingController> originControllers = [];
-
-  @override
-  void initState() {
-    super.initState();
-    // Start with one pair of origin/destination fields
-    addNewCity();
-  }
-
-  void addNewCity() {
-    setState(() {
-      destinationControllers.add(TextEditingController());
-      originControllers.add(TextEditingController());
-    });
-    print('Added a new city input. Total: ${originControllers.length}');
-  }
-
-  void removeCity(int index) {
-    setState(() {
-      destinationControllers.removeAt(index);
-      originControllers.removeAt(index);
-    });
-    print('Removed city input at index: $index');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Display all the city fields
-        Expanded(
-          child: ListView.builder(
-            itemCount: originControllers.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  // Origin input
-                  Container(
-                    height: 50,
-                    width: 340,
-                    color: Colors.white,
-                    child: TextField(
-                      controller: originControllers[index],
-                      readOnly: true,
-                      onTap: () async {
-                        // Replace with your actual city selection logic
-                        var selectedCity = await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SourceDestinationCityVC()),
-                        );
-
-                        // Assuming your city selection VC returns a city name
-                        if (selectedCity != null) {
-                          originControllers[index].text = selectedCity; // Set the text
-                        }
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFFFFFFF),
-                        prefixIcon: Icon(Icons.flight_takeoff, color: Colors.green),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(0),
-                          ),
-                        ),
-                        hintText: 'Flying from',
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Destination input
-                  Container(
-                    height: 50,
-                    width: 340,
-                    color: Colors.white,
-                    child: TextField(
-                      controller: destinationControllers[index],
-                      readOnly: true,
-                      onTap: () async {
-                        // Replace with your actual city selection logic
-                        var selectedCity = await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SourceDestinationCityVC()),
-                        );
-
-                        // Assuming your city selection VC returns a city name
-                        if (selectedCity != null) {
-                          destinationControllers[index].text = selectedCity; // Set the text
-                        }
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFFFFFFF),
-                        prefixIcon: Icon(Icons.flight_land, color: Colors.green),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(0),
-                          ),
-                        ),
-                        hintText: 'Flying to',
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  // Remove button if there are more than one destination
-                  if (originControllers.length > 1)
-                    TextButton(
-                      onPressed: () => removeCity(index),
-                      child: Text('Remove Destination'),
-                    ),
-                  SizedBox(height: 20),
-                ],
-              );
-            },
-          ),
-        ),
-        // Add new city button
-        ElevatedButton(
-          onPressed: addNewCity,
-          child: Text('Add Destination'),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    for (var controller in originControllers) {
-      controller.dispose();
-    }
-    for (var controller in destinationControllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
 }
