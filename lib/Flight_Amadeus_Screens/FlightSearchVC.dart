@@ -14,7 +14,6 @@ import 'ReturnJourney_flightsearch/forwardtripVC.dart';
 import 'flightClasstypesVC.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class FlightSearchVC extends StatefulWidget {
   String classstr = '';
 
