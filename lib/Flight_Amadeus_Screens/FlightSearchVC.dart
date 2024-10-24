@@ -14,6 +14,7 @@ import 'ReturnJourney_flightsearch/forwardtripVC.dart';
 import 'flightClasstypesVC.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class FlightSearchVC extends StatefulWidget {
   String classstr = '';
 
@@ -52,13 +53,6 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
   String RndDestinationAirportcitystr = '';
   String Retrived_Rndtrp_Destination_iatacodestr = '';
   String Retrived_Rndtrp_Destination_Citynamestr = '';
-  List<Widget> flightFields = [];
-  TextEditingController FromdateInputController = TextEditingController();
-  List<TextEditingController> fromControllers = [];
-  List<TextEditingController> toControllers = [];
-  List<double> fieldHeights = []; // List to manage dynamic heights
-  List<TextEditingController> departureControllers = [];
-
 
 
 
@@ -121,117 +115,132 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
       print(_tabController.index);
     });
   }
-  void addFlightField() {
-    print('Add flight field clicked...');
 
-    // Create new controllers for the new fields
-    TextEditingController fromController = TextEditingController();
-    TextEditingController toController = TextEditingController();
-    TextEditingController departureController = TextEditingController(); // New controller for departure
 
-    // Add the controllers to their respective lists
-    fromControllers.add(fromController);
-    toControllers.add(toController);
-    departureControllers.add(departureController);
 
-    // Add a new column for the new set of fields
-    flightFields.add(
-      Column(
-        children: [
-          Container(
-            height: 50,
-            width: 340,
-            color: Colors.white,
-            child: TextField(
-              controller: fromController,
-              readOnly: true,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-              onTap: () async {
-                print('Flying from clicked...');
-                // Logic for navigating to selection screen
-              },
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFFFFFFFF),
-                prefixIcon: Icon(Icons.flight, color: Colors.green),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0)),
-                ),
-                hintText: 'Flying from',
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            height: 50,
-            width: 340,
-            color: Colors.white,
-            child: TextField(
-              controller: toController,
-              readOnly: true,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-              onTap: () async {
-                print('Flying to clicked...');
-                // Logic for navigating to selection screen
-              },
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFFFFFFFF),
-                prefixIcon: Icon(Icons.flight, color: Colors.green),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0)),
-                ),
-                hintText: 'Flying to',
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            height: 50,
-            width: 340,
-            color: Colors.white,
-            child: TextField(
-              controller: departureController, // Use the new controller
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFFFFFFFF),
-                prefixIcon: Icon(Icons.calendar_month, color: Colors.green),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0)),
-                ),
-                hintText: 'Departure',
-              ),
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(1950),
-                  lastDate: DateTime(2050),
-                );
-                if (pickedDate != null) {
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                  departureController.text = formattedDate; // Use the new controller for departure
-                }
-              },
-            ),
-          ),
-          SizedBox(height: 10),
-        ],
-      ),
-    );
 
-    // Call setState to refresh the UI with new fields
-    setState(() {});
-  }
+  // var nameTECs = <int, TextEditingController>{};
+  // var mailTECs = <int, TextEditingController>{};
+  // List<Entry> entries = [];
+  //
+  // var item = <int, Widget>{};
+  //
+  // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   item.addAll({0: newMethod(context, 0)});
+  // }
+  //
+  // ondDone() {
+  //   entries.clear();
+  //   print(nameTECs.keys.last);
+  //   for (int i = 0; i <= nameTECs.keys.last; i++) {
+  //     var name = nameTECs[i]?.value.text;
+  //     var mail = mailTECs[i]?.value.text;
+  //
+  //     // print(mailTECs[i]?.value.text);
+  //     if (name != null && mail != null) {
+  //       entries.add(Entry(name, mail));
+  //     }
+  //
+  //   }
+  //   print(entries);
+  //   for (int a = 0; a < entries.length; a++) {
+  //
+  //     print(entries[a].name);
+  //     print(entries[a].email);
+  //   }
+  // }
+  //
+  // newMethod(
+  //     BuildContext context,
+  //     int index,
+  //     ) {
+  //   var nameController = TextEditingController();
+  //   var mailController = TextEditingController();
+  //   nameTECs.addAll({index: nameController});
+  //   mailTECs.addAll({index: mailController});
+  //   return Column(
+  //     children: [
+  //       Text(index.toString()),
+  //       TextFormField(
+  //         controller: nameController,
+  //         validator: (value) {
+  //           return value!.isEmpty ? 'Enter some text' : null;
+  //         },
+  //         // textFieldType: TextFieldType.NAME,
+  //
+  //       ),
+  //
+  //       TextFormField(
+  //         controller: mailController,
+  //         validator: (value) {},
+  //         // controller: nameCount,
+  //         //textFieldType: TextFieldType.NAME,
+  //
+  //       ),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //         children: [
+  //           TextButton(
+  //             // onTap: () async{
+  //             //   item.addAll({item.keys.last+1: newMethod(context, item.keys.last + 1)});
+  //             //   setState(() {});
+  //             //
+  //             //   // }
+  //             // },
+  //
+  //             onPressed: () {
+  //               // onTap: () async{
+  //               item.addAll({item.keys.last+1: newMethod(context, item.keys.last + 1)});
+  //               setState(() {});
+  //
+  //               // }
+  //               //},
+  //             },
+  //             child: Text('Add'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               //onTap: () {
+  //               setState(() {
+  //                 item.removeWhere((key, value) => key == index);
+  //                 nameTECs.removeWhere((key, value) => key == index);
+  //                 mailTECs.removeWhere((key, value) => key == index);
+  //               });
+  //               //},
+  //
+  //               // }
+  //               //},
+  //             },
+  //             // onTap: () {
+  //             //   setState(() {
+  //             //     item.removeWhere((key, value) => key == index);
+  //             //     nameTECs.removeWhere((key, value) => key == index);
+  //             //     mailTECs.removeWhere((key, value) => key == index);
+  //             //   });
+  //             // },
+  //
+  //             child: Text('Remove'),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
+
 
   @override
   void initState() {
     super.initState();
 
     _retrieveValues();
-    addFlightField();
 
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -671,7 +680,42 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                     },
                   )
 
-
+                    // Container(
+                    //     height: 50,
+                    //     width: 300,
+                    //     color: Colors.deepPurple,
+                    //     child: Align(
+                    //         alignment: Alignment.center,
+                    //         child: GestureDetector(
+                    //           onTap: () async{
+                    //             SharedPreferences prefs = await SharedPreferences.getInstance();
+                    //             flightTokenstr = prefs.getString('flightTokenstrKey') ?? '';
+                    //             print('tap..');
+                    //              print(flightTokenstr);
+                    //             flightTokenstr = prefs.getString('flightTokenstrKey') ?? '';
+                    //             prefs.setString("flightTokenstrKey", flightTokenstr);
+                    //
+                    //
+                    //
+                    //             print('Tapped onward....');
+                    //             Navigator.push(
+                    //               context,
+                    //               MaterialPageRoute(
+                    //                   builder: (context) => FlightOnWardJourney()),
+                    //             );
+                    //
+                    //           },
+                    //           child: Text('Search1',
+                    //               style: TextStyle(
+                    //                 height: 1.2,
+                    //                 fontFamily: 'Dubai',
+                    //                 fontSize: 20,
+                    //                 color: Colors.white,
+                    //                 fontWeight: FontWeight.w800,
+                    //               )),
+                    //         )
+                    //     )
+                    // ),
                   ],
                 ),
               ),
@@ -896,7 +940,34 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                           )
                         ],
                       ),
-                     
+                      // child: TextField(
+                      //     decoration: InputDecoration(
+                      //       filled: true,
+                      //       fillColor: Color(0xFFFFFFFF),
+                      //       prefixIcon: Icon(Icons.calendar_month, color: Colors.deepPurple),
+                      //       border: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.all(
+                      //           Radius.circular(0),
+                      //         ),
+                      //       ),
+                      //
+                      //       hintText: 'Departure',
+                      //     ),
+                      //
+                      //     controller: FromdateInputController,
+                      //     onTap: () async {
+                      //       DateTime? pickedDate = await showDatePicker(
+                      //           context: context,
+                      //           initialDate: DateTime.now(),
+                      //           firstDate: DateTime(1950),
+                      //           lastDate: DateTime(2050));
+                      //       if (pickedDate != null) {
+                      //         FromdateInputController.text =pickedDate.toString();
+                      //         fromDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                      //         FromdateInputController.text = fromDate;
+                      //       }
+                      //     }
+                      // ),
                     ),
 
 
@@ -989,293 +1060,328 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
                 ),
               ),
 
-              Container(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 50,
-                          width: 340,
-                          color: Colors.white,
-
-                          child: TextField(
-                            controller: OriginAirportCityController,
-                            readOnly: true,
-                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.w800),
-
-                            onTap: () async{
-                              print('One way source clicked...');
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SourceDestinationCityVC()),
-                              );
-                              print('Oneway selected ind1 ');
-                              print(selectedindex);
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              prefs.setInt('selectedIndexkey', selectedindex);
-                              prefs.setString("OnewayDeparturekey", 'OnewayDeparture');
-                              prefs.setString("Oneway_iatacodekey", Retrived_Oneway_iatacodestr);
-                              prefs.setString("Oneway_Citynamekey", Retrived_Oneway_Citynamestr);
 
 
+                  //Multi - city
+                  // Expanded(
+                  //   child: Container(
+                  //     color: Colors.white,
+                  //     child: LayoutBuilder(
+                  //       builder: (context, constraint) {
+                  //         return SingleChildScrollView(
+                  //           child: ConstrainedBox(
+                  //             constraints:
+                  //             BoxConstraints(minHeight: constraint.maxHeight),
+                  //             child: IntrinsicHeight(
+                  //               child: Column(
+                  //                 children: [
+                  //
+                  //                   Container(
+                  //                     child: Column(
+                  //                       children: [
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         Container(
+                  //                           height: 50,
+                  //                           width: 340,
+                  //                           color: Colors.white,
+                  //
+                  //                           child: TextField(
+                  //                             controller: OriginAirportCityController,
+                  //                             readOnly: true,
+                  //                             style: TextStyle(fontSize: 12),
+                  //
+                  //                             onTap: () async{
+                  //                               print('One way source clicked...');
+                  //
+                  //                               Navigator.push(
+                  //                                 context,
+                  //                                 MaterialPageRoute(
+                  //                                     builder: (context) => SourceDestinationCityVC()),
+                  //                               );
+                  //                               print('Oneway selected ind1 ');
+                  //                               print(selectedindex);
+                  //                               SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //                               prefs.setInt('selectedIndexkey', selectedindex);
+                  //                               prefs.setString("OnewayDeparturekey", 'OnewayDeparture');
+                  //                               prefs.setString("Oneway_iatacodekey", Retrived_Oneway_iatacodestr);
+                  //                               prefs.setString("Oneway_Citynamekey", Retrived_Oneway_Citynamestr);
+                  //
+                  //
+                  //
+                  //
+                  //                             },
+                  //                             decoration: InputDecoration(
+                  //                               filled: true,
+                  //                               fillColor: Color(0xFFFFFFFF),
+                  //                               prefixIcon: Icon(
+                  //                                   Icons.flight, color: Colors.green),
+                  //                               border: OutlineInputBorder(
+                  //                                 borderRadius: BorderRadius.all(
+                  //                                   Radius.circular(0),
+                  //                                 ),
+                  //                               ),
+                  //                               hintText: 'Flying from',
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         Container(
+                  //                           height: 50,
+                  //                           width: 340,
+                  //                           color: Colors.white,
+                  //                           child: TextField(
+                  //                             controller: DestinationAirportCityController,
+                  //                             readOnly: true,
+                  //                             style: TextStyle(fontSize: 12),
+                  //
+                  //                             onTap: () async{
+                  //                               print('One way destination clicked...');
+                  //                               Navigator.push(
+                  //                                 context,
+                  //                                 MaterialPageRoute(
+                  //                                     builder: (context) => OnewwayDestinationCityVC()),
+                  //                               );
+                  //                               print('Oneway selected ind1');
+                  //                               print(selectedindex);
+                  //                               SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //                               prefs.setInt('selectedIndexkey', selectedindex);
+                  //                               prefs.setString("OnewayArrivalkey", 'OnewayArrival');
+                  //                               prefs.setString("Oneway_Destinationiatacodekey", RetrivedOneway_Oneway_Destinationiatacodestr);
+                  //                               prefs.setString("Oneway_DestinationCitynamekey", RetrivedOnew_Oneway_DestinationCitynamestr);
+                  //
+                  //                             },
+                  //                             decoration: InputDecoration(
+                  //                               filled: true,
+                  //                               fillColor: Color(0xFFFFFFFF),
+                  //                               prefixIcon: Icon(
+                  //                                   Icons.flight, color: Colors.green),
+                  //                               border: OutlineInputBorder(
+                  //                                 borderRadius: BorderRadius.all(
+                  //                                   Radius.circular(0),
+                  //                                 ),
+                  //                               ),
+                  //                               hintText: 'Flying to',
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         Container(
+                  //                           height: 50,
+                  //                           width: 340,
+                  //                           //color: Colors.white,
+                  //                           color: Colors.white,
+                  //
+                  //                           child: Column(
+                  //                             mainAxisAlignment: MainAxisAlignment.center,
+                  //                             children: [
+                  //                               DropdownButton(
+                  //                                 isExpanded: true,
+                  //                                 // Initial Value
+                  //                                 value: currency_code_dropdownvalue,
+                  //                                 // Down Arrow Icon
+                  //                                 icon: const Icon(Icons.keyboard_arrow_down),
+                  //                                 // Array list of items
+                  //                                 items: items.map((String items) {
+                  //                                   return DropdownMenuItem(
+                  //                                     value: items,
+                  //                                     child: Text(items),
+                  //                                   );
+                  //                                 }).toList(),
+                  //                                 // After selecting the desired option,it will
+                  //                                 // change button value to selected value
+                  //                                 onChanged: (String? newValue) {
+                  //                                   setState(() {
+                  //                                     currency_code_dropdownvalue = newValue!;
+                  //                                   });
+                  //                                 },
+                  //                               ),
+                  //                             ],
+                  //                           ),
+                  //                         ),
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         Container(
+                  //                           height: 50,
+                  //                           width: 340,
+                  //                           color: Colors.white,
+                  //                           child: TextField(
+                  //                               decoration: InputDecoration(
+                  //                                 filled: true,
+                  //                                 fillColor: Color(0xFFFFFFFF),
+                  //                                 prefixIcon: Icon(
+                  //                                     Icons.calendar_month, color: Colors.green),
+                  //                                 border: OutlineInputBorder(
+                  //                                   borderRadius: BorderRadius.all(
+                  //                                     Radius.circular(0),
+                  //                                   ),
+                  //                                 ),
+                  //
+                  //                                 hintText: 'Departure',
+                  //                               ),
+                  //
+                  //                               controller: FromdateInputController,
+                  //                               onTap: () async {
+                  //                                 DateTime? pickedDate = await showDatePicker(
+                  //                                     context: context,
+                  //                                     initialDate: DateTime.now(),
+                  //                                     firstDate: DateTime(1950),
+                  //                                     lastDate: DateTime(2050));
+                  //                                 if (pickedDate != null) {
+                  //                                   FromdateInputController.text =
+                  //                                       pickedDate.toString();
+                  //                                   fromDate = DateFormat('yyyy-MM-dd').format(
+                  //                                       pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                  //
+                  //                                   FromdateInputController.text = fromDate;
+                  //                                 }
+                  //                               }
+                  //                           ),
+                  //                         ),
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         Container(
+                  //                           height: 50,
+                  //                           width: 340,
+                  //                           color: Colors.white,
+                  //                           child: TextField(
+                  //                             controller: passengerController,
+                  //                             readOnly: true,
+                  //                             style: TextStyle(fontSize: 16),
+                  //
+                  //                             onTap: () async{
+                  //                               print('Economy class clicked...');
+                  //                               Navigator.push(
+                  //                                 context,
+                  //                                 MaterialPageRoute(
+                  //                                     builder: (context) => classTypesVC()),
+                  //                               );
+                  //                               print('Oneway selected ind');
+                  //                               print(selectedindex);
+                  //                               SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //                               prefs.setInt('selectedIndexkey', selectedindex);
+                  //
+                  //                             },
+                  //                             decoration: InputDecoration(
+                  //                               filled: true,
+                  //                               fillColor: Color(0xFFFFFFFF),
+                  //                               prefixIcon: Icon(Icons.account_circle_outlined,
+                  //                                   color: Colors.green),
+                  //                               border: OutlineInputBorder(
+                  //                                 borderRadius: BorderRadius.all(
+                  //                                   Radius.circular(0),
+                  //                                 ),
+                  //                               ),
+                  //                               hintText: '1 Passenger , Economy',
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //                         SizedBox(
+                  //                           height: 30,
+                  //                         ),
+                  //
+                  //
+                  //                         Container(
+                  //
+                  //                           child: Column(
+                  //                             children: [
+                  //                               ListView.builder(
+                  //                                   shrinkWrap: true,
+                  //                                   physics: ScrollPhysics(),
+                  //                                   itemCount: item.length,
+                  //                                   itemBuilder: (context, index) {
+                  //                                     return item.values.elementAt(index);
+                  //                                   }),
+                  //                               TextButton(
+                  //                                 onPressed: () {
+                  //                                   //onTap: () {
+                  //                                   if (_formKey.currentState!.validate()) {
+                  //                                     ondDone();
+                  //                                     // _formKey.currentState!.save();
+                  //                                     setState(() {});
+                  //                                   }
+                  //                                   //},
+                  //                                 },
+                  //                                 // onTap: () {
+                  //                                 //   if (_formKey.currentState!.validate()) {
+                  //                                 //     ondDone();
+                  //                                 //     // _formKey.currentState!.save();
+                  //                                 //     setState(() {});
+                  //                                 //   }
+                  //                                 // },
+                  //                                 //color: Colors.red,
+                  //                                 child: Text('save'),
+                  //                               ),
+                  //                               Center(
+                  //                                 child: Text('Test'),
+                  //                               ),
+                  //
+                  //                             ],
+                  //                           ),
+                  //                         ),
+                  //
+                  //
+                  //
+                  //
+                  //                         InkWell(
+                  //                           child: Container(
+                  //                               height: 50,
+                  //                               width: 340,
+                  //                               color: Colors.green,
+                  //
+                  //                               child: Align(
+                  //                                 alignment: Alignment.center,
+                  //                                 child: Text(
+                  //                                     "Search",
+                  //                                     style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w800,color: Colors.white),
+                  //                                     textAlign: TextAlign.center
+                  //                                 ),
+                  //                               )
+                  //
+                  //                           ),
+                  //                           onTap: () async {
+                  //                             print("tapped on container");
+                  //                             SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //                             flightTokenstr = prefs.getString('flightTokenstrKey') ?? '';
+                  //                             print('tap..');
+                  //                             print(flightTokenstr);
+                  //                             flightTokenstr = prefs.getString('flightTokenstrKey') ?? '';
+                  //                             prefs.setString("flightTokenstrKey", flightTokenstr);
+                  //                             prefs.setString("from_Datekey", FromdateInputController.text);
+                  //                             print(currency_code_dropdownvalue);
+                  //                             prefs.setString('currency_code_dropdownvaluekey', (currency_code_dropdownvalue));
+                  //
+                  //                             print('Tapped onward....');
+                  //                             Navigator.push(
+                  //                               context,
+                  //                               MaterialPageRoute(
+                  //                                   builder: (context) => FlightOnWardTrip()),
+                  //                             );
+                  //                           },
+                  //                         )
+                  //                       ],
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //             ),
+                  //           ),
+                  //           )
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // )
 
 
-                            },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xFFFFFFFF),
-                              prefixIcon: Icon(
-                                  Icons.flight, color: Colors.green),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(0),
-                                ),
-                              ),
-                              hintText: 'Flying from',
-                            ),
-                          ),
-                        ),
 
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 50,
-                          width: 340,
-                          color: Colors.white,
-                          child: TextField(
-                            controller: DestinationAirportCityController,
-                            readOnly: true,
-                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.w800),
-
-                            onTap: () async{
-                              print('One way destination clicked...');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OnewwayDestinationCityVC()),
-                              );
-                              print('Oneway selected ind1');
-                              print(selectedindex);
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              prefs.setInt('selectedIndexkey', selectedindex);
-                              prefs.setString("OnewayArrivalkey", 'OnewayArrival');
-                              prefs.setString("Oneway_Destinationiatacodekey", RetrivedOneway_Oneway_Destinationiatacodestr);
-                              prefs.setString("Oneway_DestinationCitynamekey", RetrivedOnew_Oneway_DestinationCitynamestr);
-
-                            },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xFFFFFFFF),
-                              prefixIcon: Icon(
-                                  Icons.flight, color: Colors.green),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(0),
-                                ),
-                              ),
-                              hintText: 'Flying to',
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 50,
-                          width: 340,
-                          //color: Colors.white,
-                          color: Colors.white,
-
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              DropdownButton(
-                                isExpanded: true,
-                                // Initial Value
-                                value: currency_code_dropdownvalue,
-                                // Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                // Array list of items
-                                items: items.map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(items),
-                                  );
-                                }).toList(),
-                                // After selecting the desired option,it will
-                                // change button value to selected value
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    currency_code_dropdownvalue = newValue!;
-
-
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 50,
-                          width: 340,
-                          color: Colors.white,
-                          child: TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Color(0xFFFFFFFF),
-                                prefixIcon: Icon(
-                                    Icons.calendar_month, color: Colors.green),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(0),
-                                  ),
-                                ),
-
-                                hintText: 'Departure',
-                              ),
-
-                              controller: FromdateInputController,
-                              onTap: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1950),
-                                    lastDate: DateTime(2050));
-                                if (pickedDate != null) {
-                                  FromdateInputController.text =
-                                      pickedDate.toString();
-                                  fromDate = DateFormat('yyyy-MM-dd').format(
-                                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-
-                                  FromdateInputController.text = fromDate;
-                                }
-                              }
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 50,
-                          width: 340,
-                          color: Colors.white,
-                          child: TextField(
-                            controller: passengerController,
-                            readOnly: true,
-                            style: TextStyle(fontSize: 16),
-
-                            onTap: () async{
-                              print('Economy class clicked...');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => classTypesVC()),
-                              );
-                              print('Oneway selected ind');
-                              print(selectedindex);
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              prefs.setInt('selectedIndexkey', selectedindex);
-
-                            },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xFFFFFFFF),
-                              prefixIcon: Icon(Icons.account_circle_outlined,
-                                  color: Colors.green),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(0),
-                                ),
-                              ),
-                              hintText: '1 Passenger , Economy',
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Adjust alignment as needed
-                          children: [
-                            InkWell(
-                              child: Container(
-                                height: 50, // Set height for consistent button size
-                                width: 160, // Set a width for the button (or use Expanded)
-                                color: Colors.green,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Add Dest",
-                                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w800, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                // Add destination logic here
-                                addFlightField(); // Add new fields when tapped
-                              },
-                            ),
-                            SizedBox(width: 10), // Optional: add spacing between the buttons
-                            InkWell(
-                              child: Container(
-                                height: 50,
-                                width: 160, // Set a width for the button (or use Expanded)
-                                color: Colors.green,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Search",
-                                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w800, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                              onTap: () async {
-                                if (FromdateInputController.text != '') {
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  flightTokenstr = prefs.getString('flightTokenstrKey') ?? '';
-                                  print('tap..');
-                                  print(flightTokenstr);
-                                  prefs.setString("flightTokenstrKey", flightTokenstr);
-                                  prefs.setString("from_Datekey", FromdateInputController.text);
-                                  print(currency_code_dropdownvalue);
-                                  prefs.setString('currency_code_dropdownvaluekey', currency_code_dropdownvalue);
-                                  prefs.setString('travel_classstr', classstr);
-
-                                  print('Tapped onward....');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FlightOnWardTrip(),
-                                    ),
-                                  );
-                                } else {
-                                  print('empty field...');
-                                  final snackBar = SnackBar(
-                                    content: Text('Please select currency code and date.'),
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                }
-                              },
-                            ),
-                          ],
-                        )
-
-
-
-                      ],
-                    ),
-                  ),
 
 
             ]),
@@ -1285,7 +1391,6 @@ class _FlightSearchVCState extends State<FlightSearchVC> with SingleTickerProvid
     );
   }
 }
-
 
 
 
